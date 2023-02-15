@@ -7,6 +7,7 @@ const app=express();
 app.set('view engine','ejs'); //tell express app to use ejs view engine
 app.set('views',path.join(__dirname,'views')); //tell express where to find view
 
+app.use(express.static('public'));
 
 //register routes
 app.use(authRoutes);
