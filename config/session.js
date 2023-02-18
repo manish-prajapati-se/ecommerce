@@ -18,7 +18,7 @@ function createSessionConfig(){
     //express-session wants an object with all configuration settings
     return {
         secret:'super-secret',
-        resave:false,   //only save the session only when data in it changed
+        resave:false,   //only update the session only when data in it changed
         saveUninitialized:false,
         store:createSessionStore(),
         cookie:{
