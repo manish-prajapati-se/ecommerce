@@ -14,6 +14,7 @@ const adminRoutes=require('./routes/admin.routes');
 const addCsrfTokenMiddleware=require('./middlewares/csrf-token');
 const errorHandlerMiddleware=require('./middlewares/error-handler');
 const checkAuthStatusMiddleware=require('./middlewares/check-auth');
+const protectRoutesMiddleware=require('./middlewares/protect-routes');
 
 const app=express();
 app.set('view engine','ejs'); //tell express app to use ejs view engine
@@ -35,6 +36,8 @@ app.use(checkAuthStatusMiddleware);
 app.use(baseRoutes);
 app.use(authRoutes);
 app.use(productRoutes);
+
+app.use(protectRoutesMiddleware);
 app.use('/admin',adminRoutes);
 
 app.use(errorHandlerMiddleware);//error handling middleware
