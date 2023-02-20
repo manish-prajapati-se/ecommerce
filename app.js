@@ -10,12 +10,15 @@ const productRoutes=require('./routes/products.routes');
 const baseRoutes=require('./routes/base.routes')
 const adminRoutes=require('./routes/admin.routes');
 const cartRoutes=require('./routes/cart.routes');
+const orderRoutes=require('./routes/orders.routes');
 
 const addCsrfTokenMiddleware=require('./middlewares/csrf-token');
 const errorHandlerMiddleware=require('./middlewares/error-handler');
 const checkAuthStatusMiddleware=require('./middlewares/check-auth');
 const protectRoutesMiddleware=require('./middlewares/protect-routes');
 const cartMiddleware=require('./middlewares/cart');
+const updateCartPricesMiddleware=require('./middlewares/update-cart-prices');
+const notFoundMiddleware=require('./middlewares/not-found');
 
 const app=express();
 app.set('view engine','ejs'); //tell express app to use ejs view engine
@@ -34,6 +37,7 @@ app.use(csurf());   //generates the token
 //all incoming requests which are not get requests needs to have a csrf token attached
 
 app.use(cartMiddleware);
+app.use(updateCartPricesMiddleware);
 app.use(addCsrfTokenMiddleware);    //distributes the generated token to route handler functions and views
 app.use(checkAuthStatusMiddleware);
 
@@ -43,8 +47,10 @@ app.use(authRoutes);
 app.use(productRoutes);
 app.use('/cart',cartRoutes);
 
-app.use(protectRoutesMiddleware);
-app.use('/admin',adminRoutes);
+app.use('/orders',protectRoutesMiddleware,orderRoutes);
+app.use('/admin',protectRoutesMiddleware,adminRoutes);
+
+app.use(notFoundMiddleware);
 
 app.use(errorHandlerMiddleware);//error handling middleware
 
